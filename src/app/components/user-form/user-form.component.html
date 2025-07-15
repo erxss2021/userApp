@@ -1,0 +1,118 @@
+<div class="modal" tabindex="-1" style="display: block;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Form {{(user.id > 0) ? 'Update' :  'Create'}} User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onOpen()"></button>
+      </div>
+      <div class="modal-body">
+          <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm">
+              <div>
+                  <input type="text"  
+                      class="form-control my-2"
+                      placeholder="Name"
+                      name="name"
+                      [(ngModel)]="user.name"
+                      required
+                      #name="ngModel"
+                      />
+                  @if (name.invalid && (name.dirty || name.touched)) {
+                      @if (name.errors!['required']) {
+          
+                          <div class="text-danger">Name is requerid</div>
+                      }
+                  }
+              </div>
+              <div>
+                  <input type="text"  
+                  class="form-control my-2"
+                  placeholder="Lastname"
+                  name="lastname"
+                  [(ngModel)]="user.lastname"
+                  required
+                  #lastname="ngModel"
+                  />
+                  @if (lastname.invalid && (lastname.dirty || lastname.touched)) {
+                      @if (lastname.errors!['required']) {
+              
+                          <div class="text-danger">Lastname is requerid</div>
+                      }
+                  }
+              </div>
+              <div>
+                  <input type="email"  
+                      class="form-control my-2"
+                      placeholder="Email"
+                      name="email"
+                      [(ngModel)]="user.email"
+                      required
+                      email
+                      #email="ngModel"
+                      />
+                  @if (email.invalid && (email.dirty || email.touched)) {
+                      @if (email.errors!['required']) {
+                      
+                          <div class="text-danger">Email is requerid</div>
+                      }
+                      @if (email.errors!['email']) {
+                      
+                          <div class="text-danger">Email is not format correct with arroba</div>
+                      }
+                  }
+              </div>
+              <div>
+                  <input type="text"  
+                      class="form-control my-2"
+                      placeholder="Username"
+                      name="username"
+                      [(ngModel)]="user.username"
+                      required
+                      minlength="5"
+                      #username="ngModel"
+                      
+                      />
+                  @if (username.invalid && (username.dirty || username.touched)) {
+                      @if (username.errors!['required']) {
+                      
+                      <div class="text-danger">Username is requerid</div>
+                      }
+                      @if (username.errors!['minlength']) {
+                          <div class="text-danger">Username debe tener al menos 5 caracteres</div>
+                      }
+                  }
+              </div>
+              <div>
+                  <input type="password"  
+                      class="form-control my-2"
+                      placeholder="Password"
+                      name="password"
+                      [(ngModel)]="user.password"
+                      required
+                      minlength="5"
+                      #password="ngModel"
+                      />
+                  @if (password.invalid && (password.dirty || password.touched)) {
+                      @if (password.errors!['required']) {
+                      
+                          <div class="text-danger">Password is requerid</div>
+                      }
+                      @if (password.errors!['minlength']) {
+                          <div class="text-danger">Password debe tener al menos 5 caracteres</div>
+                      }
+                  }
+              </div>
+              <div>
+                  <button type="submit" class="btn btn-primary my-2" [disabled]="userForm.invalid" >
+                      {{(user.id > 0) ? 'Update' :  'Create'}}
+                  </button>
+                  <button type="button" class="btn btn-secondary m-2" (click)="onClear(userForm)">Clear</button>
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onOpen()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
