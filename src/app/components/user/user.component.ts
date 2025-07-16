@@ -1,29 +1,41 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter} from '@angular/core';
 import { User } from '../../models/user';
+import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { SharingDataService } from '../../services/sharing-data.service';
 
 @Component({
   selector: 'user',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './user.component.html'
 })
 export class UserComponent {
 
-  @Input() users: User[] = [];
+  title: string = "Listado de usuarios!";
 
-  @Output() idUserEventEmitter: EventEmitter<number> = new EventEmitter();
-  @Output() selectedUserEventEmitter: EventEmitter<User> = new EventEmitter();
+  users: User[] = [];
+
+  
+
+  constructor(
+    private readonly router: Router,
+    private readonly userService: UserService,
+    private readonly sharingData: SharingDataService
+  ){
+    if(router.getCurrentNavigation()?.extras.state){
+
+      this.users = router.getCurrentNavigation()?.extras.state!['users'];
+    }else{
+      this.userService.findAll().subscribe(users => this.users = users)
+    }
+  }
 
   onRemoveUser(id: number): void{
-
-    // const confirmRemove =  confirm('Estas seguro que desea eliminar?');
-    this.idUserEventEmitter.emit(id);
-    // if(confirmRemove){
-
-    // }
+    this.sharingData.idUserEventEmitter.emit(id);
   }
 
   onSelectedUser(user: User): void{
-    this.selectedUserEventEmitter.emit(user);
+    this.router.navigate(['/users/edit', user.id], {state: {user}});
   }
 
 }
