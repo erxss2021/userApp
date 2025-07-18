@@ -8,19 +8,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserService {
 
-  private users: User[] = [];
+  private readonly users: User[] = [];
 
-  private url: string = 'http://localhost:8080/api/users';
+  private readonly url: string = 'http://localhost:8080/api/users';
+
   constructor(private readonly http: HttpClient){}
 
   findAll(): Observable<User[]>{
      return this.http.get<User[]>(this.url);
-
-    // return this.http.get('http://localhost:8080/api/users').pipe(
-    //   map(data => data as User[]),
-    // );
   }
   
+   findAllPageable(page: number): Observable<any>{
+     return this.http.get<any>(`${this.url}/page/${page}`);
+
+  }
 
   findById(id: number): Observable<User>{
     return this.http.get<User>(`${this.url}/${id}`);

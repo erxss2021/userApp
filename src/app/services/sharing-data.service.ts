@@ -16,6 +16,8 @@ export class SharingDataService {
 
   private readonly _errorUserFormEventEmitter = new EventEmitter();
 
+  private readonly _pageUsersEventEmitter = new EventEmitter();
+
   constructor(){}
 
   get newUserEventEmitter(): EventEmitter<User>{
@@ -36,5 +38,9 @@ export class SharingDataService {
   
   get errorUserFormEventEmitter(){
     return this._errorUserFormEventEmitter;
+  }
+
+  get pageUsersEventEmitter(){
+    return this._pageUsersEventEmitter;
   }
 }
