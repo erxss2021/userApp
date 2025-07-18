@@ -41,11 +41,18 @@ export class UserAppComponent implements OnInit{
   addUser(){
     this.sharingData.newUserEventEmitter.subscribe(user =>{
       if(user.id > 0){
-        this.users = this.users.map(u => (u.id == user.id) ? {... user} : u);
+        this.userService.update(user).subscribe(userUpdated => {
+          this.users = this.users.map(u => (u.id == userUpdated.id) ? {... userUpdated} : u);
+          this.router.navigate(['/users'], {state: {users: this.users}});
+        });
       }else{
-        this.users =[... this.users, {...user, id: new Date().getTime()}];
+        this.userService.create(user).subscribe(userNew => {
+          console.log(userNew);
+          this.users = [... this.users, {... userNew}];
+          this.router.navigate(['/users'], {state: {users: this.users}});
+        });
       }
-      this.router.navigate(['/users'], {state: {users: this.users}})
+      // this.router.navigate(['/users']);
       Swal.fire({
         title: "Saved!",
         text: "User saved correct!",
@@ -66,9 +73,12 @@ export class UserAppComponent implements OnInit{
         confirmButtonText: "Yes!"
       }).then((result) => {
         if (result.isConfirmed) {
-          this.users = this.users.filter(user => user.id != id);
-          this.router.navigate(['/users/create'], {skipLocationChange: true}).then( () => {
-            this.router.navigate(['/users'], {state: {users: this.users}})
+
+          this.userService.delete(id).subscribe(() => {
+            this.users = this.users.filter(user => user.id != id);
+            this.router.navigate(['/users/create'], {skipLocationChange: true}).then( () => {
+              this.router.navigate(['/users'], {state: {users: this.users}});
+            });
           });
           Swal.fire({
             title: "Deleted!",
