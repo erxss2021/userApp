@@ -41,23 +41,50 @@ export class UserAppComponent implements OnInit{
   addUser(){
     this.sharingData.newUserEventEmitter.subscribe(user =>{
       if(user.id > 0){
-        this.userService.update(user).subscribe(userUpdated => {
-          this.users = this.users.map(u => (u.id == userUpdated.id) ? {... userUpdated} : u);
-          this.router.navigate(['/users'], {state: {users: this.users}});
-        });
+        this.userService.update(user).subscribe(
+          {
+            next: (userUpdated) => {
+              this.users = this.users.map(u => (u.id == userUpdated.id) ? {... userUpdated} : u);
+              this.router.navigate(['/users'], {state: {users: this.users}});
+               Swal.fire({
+                title: "Updated!",
+                text: "User update correct!",
+                icon: "success"
+              });
+            },
+            error: (err) => {
+              if(err.status == 400){
+
+                this.sharingData.errorUserFormEventEmitter.emit(err.error);
+              }
+              
+            }
+          });
+
       }else{
-        this.userService.create(user).subscribe(userNew => {
-          console.log(userNew);
-          this.users = [... this.users, {... userNew}];
-          this.router.navigate(['/users'], {state: {users: this.users}});
-        });
+        this.userService.create(user).subscribe(
+          {
+            next: (userNew) => {
+          
+              console.log(userNew);
+              this.users = [... this.users, {... userNew}];
+              this.router.navigate(['/users'], {state: {users: this.users}});
+
+              Swal.fire({
+                title: "Saved!",
+                text: "User saved correct!",
+                icon: "success"
+              });
+            },
+            error: (err) =>{
+              // console.log(err.status)
+              if(err.status == 400){
+                this.sharingData.errorUserFormEventEmitter.emit(err.error)
+              }
+            }
+          });
       }
-      // this.router.navigate(['/users']);
-      Swal.fire({
-        title: "Saved!",
-        text: "User saved correct!",
-        icon: "success"
-      });
+      
     });
   }
 
